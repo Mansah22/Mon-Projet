@@ -9,17 +9,17 @@ export const isAdmin = async (req, res, next) => {
 
         try {
             const role = await utilisateur.getRole()
-            if (role && role.firstName.toLowerCase() == 'admin') {
+            if (role && role.name.toLowerCase() == 'admin') {
                 next()
             } else {
                 return res.status(403).json({ message: "Il faut avoir le droit admin!!" })
             }
 
         } catch (error) {
-            res.status(404).json({ message: error.message })
+            res.status(403).json({ message: error.message })
         }
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(500).json({ message: error.message })
     }
 
 
