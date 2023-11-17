@@ -50,10 +50,15 @@ export const modifieUser = async (req, res) => {
   const nouvellesInformations = req.body;
 
   try {
-    await User.modifi(nouvellesInformations, { where: { id } });
-    res.status(201).json({ message: `User n°${id} a été mis à jour avec succès` });
+    const userToUpdate = await User.findByPk(id);
+    if (!userToUpdate) {
+      return res.status(404).json({ message: `User n°${id} non trouvé` });
+    }
+
+    const updatedUser = await userToUpdate.update(nouvellesInformations);
+    res.status(200).json({ message: `User n°${id} a été mis à jour avec succès`, data: updatedUser });
   } catch (error) {
-    res.status(400).json({ message: `User n°${id} n'a pas été mis à jour` });
+    res.status(400).json({ message: `User n°${id} n'a pas été mis à jour`, error: error.message });
   }
 };
 
